@@ -27,19 +27,22 @@ function sortByRelevance(results: Array<{ path: string; content: string }>) {
 }
 
 function groupResultsByPath(results: Array<{ metadata: Record<string, any>; document: string }>) {
-  const grouped = new Map<string, string[]>();
+  const grouped = new Map<string, { chunks: string[]; permalink: string | null; metadata: Record<string, any> }>();
 
   for (const result of results) {
     const path = result.metadata?.document_key || "unknown";
+    const permalink = result.metadata?.permalink || null;
     if (!grouped.has(path)) {
-      grouped.set(path, []);
+      grouped.set(path, { chunks: [], permalink, metadata: result.metadata || {} });
     }
-    grouped.get(path)!.push(result.document);
+    grouped.get(path)!.chunks.push(result.document);
   }
 
-  return Array.from(grouped.entries()).map(([path, chunks]) => ({
+  return Array.from(grouped.entries()).map(([path, data]) => ({
     path,
-    content: chunks.join("..."),
+    content: data.chunks.join("..."),
+    permalink: data.permalink,
+    metadata: data.metadata,
   }));
 }
 

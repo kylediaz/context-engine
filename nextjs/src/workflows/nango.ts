@@ -196,6 +196,7 @@ function transformToUnifiedDocument(
   const versionKey = `${documentKey}::${lastModified}`;
 
   let content = "";
+  let permalink: string | null = null;
   let metadata: Record<string, any> = {
     source,
     document_key: documentKey,
@@ -206,6 +207,7 @@ function transformToUnifiedDocument(
   if (model === "GithubIssue" || model.includes("Issue")) {
     const issueRecord = record as GithubIssueRecord;
     content = issueRecord.body || issueRecord.title || "";
+    permalink = `https://github.com/${issueRecord.owner}/${issueRecord.repo}/issues/${issueRecord.issue_number}`;
     metadata = {
       ...metadata,
       type: "github_issue",
@@ -218,10 +220,16 @@ function transformToUnifiedDocument(
       author_id: issueRecord.author_id,
       date_created: issueRecord.date_created,
       date_last_modified: issueRecord.date_last_modified,
+      permalink,
     };
   } else if (model.includes("Slack") || model.includes("Message")) {
     const slackRecord = record as SlackMessageRecord;
     content = slackRecord.text || "";
+    // Slack permalink format: https://{workspace}.slack.com/archives/{channel_id}/p{ts}
+    // We don't have workspace domain, so we'll construct a relative permalink
+    // that can be resolved with the workspace info from the connection
+    const tsFormatted = slackRecord.ts.replace(".", "");
+    permalink = `https://trychroma.slack.com/archives/${slackRecord.channel_id}/p${tsFormatted}`;
     metadata = {
       ...metadata,
       type: "slack_message",
@@ -232,17 +240,21 @@ function transformToUnifiedDocument(
       subtype: slackRecord.subtype,
       app_id: slackRecord.app_id,
       bot_id: slackRecord.bot_id,
+      permalink,
     };
   } else if (model === "SlackMessageReaction" || model.includes("Contact")) {
     content = record.fullName || record.name || "";
+    permalink = null;
     metadata = {
       ...metadata,
       type: "contact",
       fullName: record.fullName || record.name,
       avatar: record.avatar,
+      permalink,
     };
   } else if (model.includes("File") || model.includes("Drive")) {
     content = record.title || record.name || "";
+    permalink = record.url || null;
     metadata = {
       ...metadata,
       type: "file",
@@ -250,6 +262,7 @@ function transformToUnifiedDocument(
       mimeType: record.mimeType || record.mime_type,
       url: record.url,
       size: record.size,
+      permalink,
     };
   } else {
     return null;
@@ -260,6 +273,7 @@ function transformToUnifiedDocument(
     document_key: documentKey,
     version_key: versionKey,
     content,
+    permalink,
     metadata,
   };
 }

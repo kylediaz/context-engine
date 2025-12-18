@@ -136,6 +136,52 @@ function ToolOutput({ toolName, output }: { toolName: string; output: any }) {
   }
 }
 
+function reconstructPermalink(metadata: Record<string, any>): string | null {
+  if (!metadata || typeof metadata !== "object") {
+    return null;
+  }
+
+  const type = metadata.type;
+
+  // GitHub issues
+  if (type === "github_issue") {
+    const owner = metadata.owner;
+    const repo = metadata.repo;
+    const issueNumber = metadata.issue_number;
+    if (owner && repo && issueNumber != null) {
+      return `https://github.com/${owner}/${repo}/issues/${issueNumber}`;
+    }
+  }
+
+  // Slack messages
+  if (type === "slack_message") {
+    const channelId = metadata.channel_id;
+    const ts = metadata.ts;
+    if (channelId && ts) {
+      // Format timestamp: remove decimal point
+      const tsFormatted = String(ts).replace(".", "");
+      // Note: We don't have workspace domain, so using a generic format
+      // This could be improved if workspace info is available in metadata
+      return `https://app.slack.com/client/${channelId}/message/${tsFormatted}`;
+    }
+  }
+
+  // Files
+  if (type === "file") {
+    const url = metadata.url;
+    if (url && typeof url === "string") {
+      return url;
+    }
+  }
+
+  // Contacts don't have permalinks
+  if (type === "contact") {
+    return null;
+  }
+
+  return null;
+}
+
 function SearchOutput({ output }: { output: any }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -164,21 +210,75 @@ function SearchOutput({ output }: { output: any }) {
     );
   }
 
+  function formatResultLabel(metadata: Record<string, any>): string {
+    const type = metadata?.type;
+    
+    if (type === "github_issue") {
+      const issueNumber = metadata.issue_number;
+      if (issueNumber != null) {
+        return `issue #${issueNumber}`;
+      }
+    }
+    
+    if (type === "slack_message") {
+      return "slack message";
+    }
+    
+    if (type === "file") {
+      const title = metadata.title;
+      if (title) {
+        return title;
+      }
+    }
+    
+    if (type === "contact") {
+      const fullName = metadata.fullName;
+      if (fullName) {
+        return fullName;
+      }
+    }
+    
+    return metadata?.document_key || "unknown";
+  }
+
   return (
     <div className="flex flex-row gap-[1ch] font-mono text-sm max-w-full">
       <span className="shrink-0">⎿</span>
-      <div className="flex-1 min-w-0">
-        {results.map((result: any, index: number) => (
-          <motion.div
-            key={index}
-            className="truncate w-full cursor-pointer hover:underline"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: index * 0.03, duration: 0.01 }}
-          >
-            {result.path || "unknown"}
-          </motion.div>
-        ))}
+      <div className="flex-1 min-w-0 flex flex-col">
+        {results.map((result: any, index: number) => {
+          const permalink = result.permalink || reconstructPermalink(result.metadata || {});
+          const hasLink = permalink && typeof permalink === "string";
+          const content = formatResultLabel(result.metadata || {});
+          
+          if (hasLink) {
+            return (
+              <motion.a
+                key={index}
+                href={permalink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="truncate w-full cursor-pointer hover:underline text-black dark:text-white"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.03, duration: 0.01 }}
+              >
+                {content}
+              </motion.a>
+            );
+          }
+          
+          return (
+            <motion.div
+              key={index}
+              className="truncate w-full text-black dark:text-white"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: index * 0.03, duration: 0.01 }}
+            >
+              {content}
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ export interface UnifiedDocument {
   document_key: string;
   version_key: string;
   content: string;
+  permalink: string | null;
   metadata: Record<string, any>;
 }
 
