@@ -36,6 +36,7 @@ export type FormState =
 export interface SessionPayload {
   userId: string;
   expiresAt: Date;
+  [key: string]: any;
 }
 
 export const ChromaCredentialsSchema = z.object({
