@@ -13,7 +13,7 @@ import {
 
 export default async function LoginPage() {
   const user = await getUserOptional();
-  
+
   if (user) {
     redirect("/dashboard");
   }
@@ -43,4 +43,3 @@ export default async function LoginPage() {
     </div>
   );
 }
-

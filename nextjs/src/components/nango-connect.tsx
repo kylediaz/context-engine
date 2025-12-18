@@ -11,7 +11,11 @@ interface NangoConnectProps {
   onRefresh?: () => void;
 }
 
-export default function NangoConnect({ onConnect, onClose, onRefresh }: NangoConnectProps) {
+export default function NangoConnect({
+  onConnect,
+  onClose,
+  onRefresh,
+}: NangoConnectProps) {
   const [nango, setNango] = useState<Nango | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,12 +60,8 @@ export default function NangoConnect({ onConnect, onClose, onRefresh }: NangoCon
   };
 
   return (
-    <Button
-      onClick={handleOpenConnect}
-      disabled={isLoading || !nango}
-    >
+    <Button onClick={handleOpenConnect} disabled={isLoading || !nango}>
       {isLoading ? "Loading..." : "Connect Integration"}
     </Button>
   );
 }
-

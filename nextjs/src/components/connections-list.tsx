@@ -18,7 +18,10 @@ import {
 } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { getNangoConnections, deleteNangoConnection } from "@/app/actions/nango";
+import {
+  getNangoConnections,
+  deleteNangoConnection,
+} from "@/app/actions/nango";
 import { Trash2 } from "lucide-react";
 
 interface Connection {
@@ -29,7 +32,11 @@ interface Connection {
   updatedAt: Date;
 }
 
-export default function ConnectionsList({ refreshKey }: { refreshKey?: number }) {
+export default function ConnectionsList({
+  refreshKey,
+}: {
+  refreshKey?: number;
+}) {
   const [connections, setConnections] = useState<Connection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -45,7 +52,10 @@ export default function ConnectionsList({ refreshKey }: { refreshKey?: number })
     }
   };
 
-  const handleDelete = async (providerConfigKey: string, connectionId: string) => {
+  const handleDelete = async (
+    providerConfigKey: string,
+    connectionId: string,
+  ) => {
     try {
       await deleteNangoConnection(providerConfigKey, connectionId);
       await loadConnections();
@@ -96,7 +106,8 @@ export default function ConnectionsList({ refreshKey }: { refreshKey?: number })
       return `Updated ${dateObj.toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
-        year: dateObj.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
+        year:
+          dateObj.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
       })}`;
     }
   };
@@ -116,13 +127,20 @@ export default function ConnectionsList({ refreshKey }: { refreshKey?: number })
             <ItemTitle className="capitalize">
               {capitalizeProvider(connection.providerConfigKey)}
             </ItemTitle>
-            <ItemDescription>{formatDate(connection.updatedAt)}</ItemDescription>
+            <ItemDescription>
+              {formatDate(connection.updatedAt)}
+            </ItemDescription>
           </ItemContent>
           <ItemActions>
             <Button
               variant="ghost"
               size="icon-sm"
-              onClick={() => handleDelete(connection.providerConfigKey, connection.connectionId)}
+              onClick={() =>
+                handleDelete(
+                  connection.providerConfigKey,
+                  connection.connectionId,
+                )
+              }
               aria-label={`Delete ${capitalizeProvider(connection.providerConfigKey)} connection`}
             >
               <Trash2 className="size-4" />
@@ -133,4 +151,3 @@ export default function ConnectionsList({ refreshKey }: { refreshKey?: number })
     </ItemGroup>
   );
 }
-

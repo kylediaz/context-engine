@@ -1,18 +1,32 @@
-import { ChromaValueError, CloudClient, Collection, Schema, VectorIndexConfig, Where } from "chromadb";
-import { ChromaCloudQwenEmbeddingFunction, ChromaCloudQwenEmbeddingModel, ChromaCloudQwenEmbeddingTask } from "@chroma-core/chroma-cloud-qwen";
+import {
+  ChromaValueError,
+  CloudClient,
+  Collection,
+  Schema,
+  VectorIndexConfig,
+  Where,
+} from "chromadb";
+import {
+  ChromaCloudQwenEmbeddingFunction,
+  ChromaCloudQwenEmbeddingModel,
+  ChromaCloudQwenEmbeddingTask,
+} from "@chroma-core/chroma-cloud-qwen";
 import { ChromaCredentials } from "@/types/chroma";
 
-
-export const schema = new Schema()
-  .createIndex(new VectorIndexConfig({
+export const schema = new Schema().createIndex(
+  new VectorIndexConfig({
     embeddingFunction: new ChromaCloudQwenEmbeddingFunction({
       apiKeyEnvVar: "CHROMA_API_KEY",
       model: ChromaCloudQwenEmbeddingModel.QWEN3_EMBEDDING_0p6B,
       task: ChromaCloudQwenEmbeddingTask.NL_TO_CODE,
-    })
-  }));
+    }),
+  }),
+);
 
-export function getCollection(credentials: ChromaCredentials, collectionName: string): Promise<Collection> {
+export function getCollection(
+  credentials: ChromaCredentials,
+  collectionName: string,
+): Promise<Collection> {
   const client = new CloudClient({
     apiKey: credentials.apiKey,
     tenant: credentials.tenantUuid,
@@ -36,7 +50,8 @@ export const validateWhere = (where: Where) => {
 
   if (Object.keys(where).length != 1) {
     throw new ChromaValueError(
-      `Expected 'where' to have exactly one operator, but got ${Object.keys(where).length
+      `Expected 'where' to have exactly one operator, but got ${
+        Object.keys(where).length
       }`,
     );
   }

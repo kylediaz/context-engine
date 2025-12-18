@@ -98,7 +98,12 @@ describe("batchChromaChunks", () => {
       ids: ["1", "2", "3", "4"],
       documents: ["doc1", "doc2", "doc3", "doc4"],
       metadatas: [{ key: "a" }, { key: "b" }, { key: "c" }, { key: "d" }],
-      embeddings: [[1, 2], [3, 4], [5, 6], [7, 8]],
+      embeddings: [
+        [1, 2],
+        [3, 4],
+        [5, 6],
+        [7, 8],
+      ],
     };
 
     const batches = batchChromaChunks(chunks, 3);
@@ -348,4 +353,3 @@ describe("createWhereClause", () => {
     });
   });
 });
-

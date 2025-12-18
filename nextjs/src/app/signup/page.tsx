@@ -13,7 +13,7 @@ import {
 
 export default async function SignupPage() {
   const user = await getUserOptional();
-  
+
   if (user) {
     redirect("/dashboard");
   }

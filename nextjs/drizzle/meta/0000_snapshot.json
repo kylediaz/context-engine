@@ -46,12 +46,8 @@
           "name": "user_chroma_credentials_user_id_users_id_fk",
           "tableFrom": "user_chroma_credentials",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -128,12 +124,8 @@
           "name": "user_connections_user_id_users_id_fk",
           "tableFrom": "user_connections",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -143,10 +135,7 @@
         "user_connections_user_id_provider_config_key_unique": {
           "name": "user_connections_user_id_provider_config_key_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id",
-            "provider_config_key"
-          ]
+          "columns": ["user_id", "provider_config_key"]
         }
       },
       "policies": {},
@@ -190,9 +179,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},

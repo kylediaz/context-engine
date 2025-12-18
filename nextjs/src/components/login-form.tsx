@@ -31,7 +31,9 @@ export default function LoginForm() {
             required
             aria-invalid={state?.errors?.email ? "true" : "false"}
           />
-          <FieldError errors={state?.errors?.email?.map((e) => ({ message: e }))} />
+          <FieldError
+            errors={state?.errors?.email?.map((e) => ({ message: e }))}
+          />
         </Field>
 
         <Field>
@@ -45,12 +47,17 @@ export default function LoginForm() {
             required
             aria-invalid={state?.errors?.password ? "true" : "false"}
           />
-          <FieldError errors={state?.errors?.password?.map((e) => ({ message: e }))} />
+          <FieldError
+            errors={state?.errors?.password?.map((e) => ({ message: e }))}
+          />
         </Field>
 
-        {state && typeof state === "object" && "message" in state && typeof state.message === "string" && (
-          <FieldError>{state.message}</FieldError>
-        )}
+        {state &&
+          typeof state === "object" &&
+          "message" in state &&
+          typeof state.message === "string" && (
+            <FieldError>{state.message}</FieldError>
+          )}
 
         <Field>
           <Button disabled={pending} type="submit" className="w-full">
@@ -61,4 +68,3 @@ export default function LoginForm() {
     </form>
   );
 }
-

@@ -30,7 +30,9 @@ export default async function DashboardPage() {
           <div className="flex justify-between items-start">
             <div>
               <CardTitle>Dashboard</CardTitle>
-              <CardDescription>Welcome back, {user.displayName}!</CardDescription>
+              <CardDescription>
+                Welcome back, {user.displayName}!
+              </CardDescription>
             </div>
             <CardAction>
               <form action={logout}>
@@ -52,17 +54,23 @@ export default async function DashboardPage() {
               <p className="text-sm font-medium">{user.displayName}</p>
             </div>
           </div>
-          
+
           <div className="border-t pt-6">
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-semibold mb-4">Chroma Credentials</h3>
+                <h3 className="text-sm font-semibold mb-4">
+                  Chroma Credentials
+                </h3>
                 <ChromaCredentialsForm
-                  initialData={chromaCredentials ? {
-                    apiKey: chromaCredentials.apiKey,
-                    databaseName: chromaCredentials.databaseName,
-                    tenantUuid: chromaCredentials.tenantUuid,
-                  } : undefined}
+                  initialData={
+                    chromaCredentials
+                      ? {
+                          apiKey: chromaCredentials.apiKey,
+                          databaseName: chromaCredentials.databaseName,
+                          tenantUuid: chromaCredentials.tenantUuid,
+                        }
+                      : undefined
+                  }
                 />
               </div>
             </div>
@@ -76,4 +84,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-

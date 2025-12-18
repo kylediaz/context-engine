@@ -29,4 +29,3 @@ export function parseChromaCode(code: string): {
 
   return result;
 }
-

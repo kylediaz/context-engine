@@ -4,11 +4,14 @@ import { db } from "@/index";
 import { userChromaCredentials } from "@/db/schema";
 import { getUser } from "@/lib/dal";
 import { eq } from "drizzle-orm";
-import { ChromaCredentialsSchema, type ChromaCredentialsFormState } from "@/lib/definitions";
+import {
+  ChromaCredentialsSchema,
+  type ChromaCredentialsFormState,
+} from "@/lib/definitions";
 
 export async function saveChromaCredentials(
   state: ChromaCredentialsFormState,
-  formData: FormData
+  formData: FormData,
 ) {
   const user = await getUser();
   if (!user) {
@@ -84,4 +87,3 @@ export async function getChromaCredentials() {
     return null;
   }
 }
-

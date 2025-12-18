@@ -5,11 +5,7 @@ import { type ChromaCredentialsFormState } from "@/lib/definitions";
 import { useActionState, useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-} from "@/components/ui/field";
+import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { parseChromaCode } from "@/lib/parse";
 import { Check } from "lucide-react";
 
@@ -21,13 +17,17 @@ interface ChromaCredentialsFormProps {
   };
 }
 
-export default function ChromaCredentialsForm({ initialData }: ChromaCredentialsFormProps) {
-  const [state, action, pending] = useActionState<ChromaCredentialsFormState, FormData>(
-    saveChromaCredentials,
-    undefined
-  );
+export default function ChromaCredentialsForm({
+  initialData,
+}: ChromaCredentialsFormProps) {
+  const [state, action, pending] = useActionState<
+    ChromaCredentialsFormState,
+    FormData
+  >(saveChromaCredentials, undefined);
   const [apiKey, setApiKey] = useState(initialData?.apiKey || "");
-  const [databaseName, setDatabaseName] = useState(initialData?.databaseName || "");
+  const [databaseName, setDatabaseName] = useState(
+    initialData?.databaseName || "",
+  );
   const [tenantUuid, setTenantUuid] = useState(initialData?.tenantUuid || "");
   const [codeSnippet, setCodeSnippet] = useState("");
 
@@ -40,7 +40,13 @@ export default function ChromaCredentialsForm({ initialData }: ChromaCredentials
   }, [initialData]);
 
   useEffect(() => {
-    if (state && typeof state === "object" && "message" in state && state.message && !state.errors) {
+    if (
+      state &&
+      typeof state === "object" &&
+      "message" in state &&
+      state.message &&
+      !state.errors
+    ) {
       setCodeSnippet("");
     }
   }, [state]);
@@ -61,8 +67,17 @@ client = chromadb.CloudClient(
   database='${databaseName || "your-database-name"}'
 )`;
 
-  const isSuccess = state && typeof state === "object" && "message" in state && state.message && !state.errors;
-  const hasCredentials = !!(initialData?.apiKey && initialData?.databaseName && initialData?.tenantUuid);
+  const isSuccess =
+    state &&
+    typeof state === "object" &&
+    "message" in state &&
+    state.message &&
+    !state.errors;
+  const hasCredentials = !!(
+    initialData?.apiKey &&
+    initialData?.databaseName &&
+    initialData?.tenantUuid
+  );
 
   return (
     <form action={action}>
@@ -81,11 +96,14 @@ client = chromadb.CloudClient(
           />
         </Field>
 
-        {state && typeof state === "object" && "errors" in state && state.errors && (
-          <FieldError>
-            {Object.values(state.errors).flat().join(", ")}
-          </FieldError>
-        )}
+        {state &&
+          typeof state === "object" &&
+          "errors" in state &&
+          state.errors && (
+            <FieldError>
+              {Object.values(state.errors).flat().join(", ")}
+            </FieldError>
+          )}
 
         <Field>
           <Button disabled={pending} type="submit" className="w-full">
@@ -107,4 +125,3 @@ client = chromadb.CloudClient(
     </form>
   );
 }
-

@@ -12,16 +12,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       { message: "Webhook processed successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json(
-      { 
-        error: "Failed to process webhook", 
-        details: error instanceof Error ? error.message : "Unknown error" 
+      {
+        error: "Failed to process webhook",
+        details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-

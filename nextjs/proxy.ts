@@ -8,7 +8,7 @@ const publicRoutes = ["/login", "/signup", "/"];
 export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const isProtectedRoute = protectedRoutes.some((route) =>
-    path.startsWith(route)
+    path.startsWith(route),
   );
   const isPublicRoute = publicRoutes.includes(path);
 
@@ -33,4 +33,3 @@ export default async function proxy(req: NextRequest) {
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };
-

@@ -1,18 +1,18 @@
 import { z } from "zod";
-import { Metadata } from "chromadb"
+import { Metadata } from "chromadb";
 
 export interface UnifiedDocument {
-    source: string;
-    document_key: string;
-    version_key: string;
-    content: string;
-    metadata: Record<string, any>;
+  source: string;
+  document_key: string;
+  version_key: string;
+  content: string;
+  metadata: Record<string, any>;
 }
 
 export interface ChromaChunks {
-    ids: string[];
-    documents: string[];
-    metadatas: Metadata[];
+  ids: string[];
+  documents: string[];
+  metadatas: Metadata[];
 }
 
 export interface ChromaCredentials {

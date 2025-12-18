@@ -18,7 +18,7 @@ export async function getNangoSessionToken() {
       id: user.id,
       email: user.email,
       display_name: user.displayName,
-    }
+    },
   });
 
   return res.data.token;
@@ -29,24 +29,31 @@ export async function getNangoConnections() {
   if (!user) {
     throw new Error("User not found");
   }
-  const connections = await db.select()
+  const connections = await db
+    .select()
     .from(userConnections)
     .where(eq(userConnections.userId, user.id));
   return connections;
 }
 
-export async function deleteNangoConnection(providerConfigKey: string, connectionId: string) {
+export async function deleteNangoConnection(
+  providerConfigKey: string,
+  connectionId: string,
+) {
   const user = await getUser();
   if (!user) {
     throw new Error("User not found");
   }
-  const res = await nango.deleteConnection(
-    providerConfigKey,
-    connectionId,
-  );
+  const res = await nango.deleteConnection(providerConfigKey, connectionId);
   if (res.status === 200) {
-    await db.delete(userConnections)
-      .where(and(eq(userConnections.userId, user.id), eq(userConnections.connectionId, connectionId)))
+    await db
+      .delete(userConnections)
+      .where(
+        and(
+          eq(userConnections.userId, user.id),
+          eq(userConnections.connectionId, connectionId),
+        ),
+      )
       .returning();
   } else {
     throw new Error("Failed to delete connection");
