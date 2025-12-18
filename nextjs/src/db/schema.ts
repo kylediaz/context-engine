@@ -51,9 +51,31 @@ export const userConnections = pgTable(
   ],
 );
 
+export const apiKeys = pgTable(
+  "api_keys",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    key: varchar("key", { length: 255 }).notNull().unique(),
+    name: varchar("name", { length: 255 }),
+    createdAt: timestamp("created_at", { precision: 3, mode: "date" })
+      .defaultNow()
+      .notNull(),
+    lastUsedAt: timestamp("last_used_at", { precision: 3, mode: "date" }),
+    expiresAt: timestamp("expires_at", { precision: 3, mode: "date" }),
+  },
+  (table) => [
+    index("api_keys_key_idx").on(table.key),
+    index("api_keys_user_id_idx").on(table.userId),
+  ],
+);
+
 export const usersRelations = relations(users, ({ many, one }) => ({
   connections: many(userConnections),
   chromaCredentials: one(userChromaCredentials),
+  apiKeys: many(apiKeys),
 }));
 
 export const userConnectionsRelations = relations(
@@ -65,3 +87,10 @@ export const userConnectionsRelations = relations(
     }),
   }),
 );
+
+export const apiKeysRelations = relations(apiKeys, ({ one }) => ({
+  user: one(users, {
+    fields: [apiKeys.userId],
+    references: [users.id],
+  }),
+}));

@@ -36,6 +36,18 @@ export async function getNangoConnections() {
   return connections;
 }
 
+export async function getNangoConnectionsCount() {
+  const user = await getUser();
+  if (!user) {
+    return 0;
+  }
+  const connections = await db
+    .select()
+    .from(userConnections)
+    .where(eq(userConnections.userId, user.id));
+  return connections.length;
+}
+
 export async function deleteNangoConnection(
   providerConfigKey: string,
   connectionId: string,

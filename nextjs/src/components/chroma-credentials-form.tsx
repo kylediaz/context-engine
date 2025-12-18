@@ -3,6 +3,7 @@
 import { saveChromaCredentials } from "@/app/actions/chroma";
 import { type ChromaCredentialsFormState } from "@/lib/definitions";
 import { useActionState, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
@@ -15,11 +16,14 @@ interface ChromaCredentialsFormProps {
     databaseName?: string;
     tenantUuid?: string;
   };
+  onSuccess?: () => void;
 }
 
 export default function ChromaCredentialsForm({
   initialData,
+  onSuccess,
 }: ChromaCredentialsFormProps) {
+  const router = useRouter();
   const [state, action, pending] = useActionState<
     ChromaCredentialsFormState,
     FormData
@@ -48,8 +52,10 @@ export default function ChromaCredentialsForm({
       !state.errors
     ) {
       setCodeSnippet("");
+      onSuccess?.();
+      router.refresh();
     }
-  }, [state]);
+  }, [state, onSuccess, router]);
 
   const handleCodePaste = (value: string) => {
     setCodeSnippet(value);

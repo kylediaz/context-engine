@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import NangoConnect from "@/components/nango-connect";
-import ConnectionsList from "@/components/connections-list";
+import ConnectionsTable from "@/components/connections-table";
 
 export default function IntegrationsSection() {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -17,7 +17,7 @@ export default function IntegrationsSection() {
         <h3 className="text-sm font-semibold">Integrations</h3>
         <NangoConnect onRefresh={handleRefresh} />
       </div>
-      <ConnectionsList refreshKey={refreshKey} />
+      <ConnectionsTable refreshKey={refreshKey} />
     </div>
   );
 }
