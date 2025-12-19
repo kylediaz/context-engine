@@ -162,7 +162,7 @@ function reconstructPermalink(metadata: Record<string, any>): string | null {
       const tsFormatted = String(ts).replace(".", "");
       // Note: We don't have workspace domain, so using a generic format
       // This could be improved if workspace info is available in metadata
-      return `https://app.slack.com/client/${channelId}/message/${tsFormatted}`;
+      return `https://trychroma.slack.com/archives/${channelId}/p${tsFormatted}`;
     }
   }
 
@@ -246,7 +246,7 @@ function SearchOutput({ output }: { output: any }) {
       <span className="shrink-0">⎿</span>
       <div className="flex-1 min-w-0 flex flex-col">
         {results.map((result: any, index: number) => {
-          const permalink = result.permalink || reconstructPermalink(result.metadata || {});
+          const permalink = reconstructPermalink(result.metadata || {});
           const hasLink = permalink && typeof permalink === "string";
           const content = formatResultLabel(result.metadata || {});
           
